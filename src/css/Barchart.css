@@ -1,0 +1,36 @@
+#tooltip{
+    background-color: red;
+    opacity: 0.6;
+    color: white;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 2px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    position: fixed;
+    display: none;    
+}
+.main-container{
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    box-shadow: 2px 2px 20px;
+    background-color:white;
+    padding: 20px 40px;
+
+}
+#svg-container .title{
+    font-size: 2.5em;
+    text-align: center;
+}
+.title{
+    font-family: monospace
+}
+
+.bar{
+    fill: rgb(51, 173, 255);
+}
+.active-rect{
+    fill: white;
+}
