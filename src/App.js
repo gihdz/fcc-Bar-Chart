@@ -14,19 +14,24 @@ const Home = () => (
   </div>
 )
 
-const App = () => (
-  <Router>
+export default class extends React.Component {
+  render(){
+    const base = process.env.PUBLIC_URL;
+    const homeUrl = `${base}/`;
+    const barchartUrl = `${base}/barchart`;
+    return ( 
+    <Router>
     <div>
       <ul className="nav" >
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/barchart">Barchart</Link></li>
+        <li><Link to={homeUrl}>Home</Link></li>
+        <li><Link to={barchartUrl}>Barchart</Link></li>
       </ul>
 
       <hr/>
 
-      <Route exact path="/" component={Home}/>
-      <Route path="/barchart" component={Barchart}/>
+      <Route exact path={homeUrl} component={Home}/>
+      <Route path={barchartUrl} component={Barchart}/>
     </div>
-  </Router>
-)
-export default App
+    </Router>);
+  }
+}

@@ -2,9 +2,11 @@
   "name": "data-visualization-challenges",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://gihdz.github.io/fcc-data-visualization-challenges/",
   "dependencies": {
     "accounting-js": "^1.1.1",
     "d3": "^4.9.1",
+    "gh-pages": "^1.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.1"
@@ -16,6 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }

@@ -49,11 +49,11 @@ export default class extends React.Component{
 
         const xMaxValue = d3.max(GDP.data, d =>{
             const split = d[0].split("-");
-            return parseInt(split[0]);
+            return parseInt(split[0], 10);
         });
         const xMinValue = d3.min(GDP.data, d =>{
             const split = d[0].split("-");
-            return parseInt(split[0]);
+            return parseInt(split[0], 10);
         });
         const xScaleForAxis = d3.scaleLinear().domain([xMinValue, xMaxValue]).range(xScaleRange);
 
