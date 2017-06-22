@@ -4,7 +4,7 @@ import accounting from 'accounting-js'
 export default class extends React.Component{
     render(){
         return (<div id="svg-container" className="main-container">
-            <div id="tooltip">
+            <div id="tooltip" className="Barchart-tooltip" >
             </div>
             <div id="title" className="title">
                 United States <em>Gross Domestic Product</em>
