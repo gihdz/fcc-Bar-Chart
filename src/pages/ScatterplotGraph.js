@@ -16,6 +16,8 @@ export default class extends React.Component{
         );
     }
     componentDidMount(){
+        this.props.selecTestSuiteFor("scatter-plot");
+
         fetch("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json").then(res => res.json()).then(res => this.displayData(res)).catch(reason => console.log(reason));
     }
     displayData(data){
@@ -41,6 +43,9 @@ export default class extends React.Component{
 
         const dopingColor = "rgb(31, 119, 180)";
         const noDopingColor = "rgb(255, 127, 14)";
+        const classNoDoping = "SG-dot-no-doping";
+        const classDoping = "SG-dot-doping";
+        const circleRadius = 6;
 
         const svg = d3.select("#ScatterplotGraph-container")
         .append("svg").attr("width", w).attr("height", h);
@@ -87,8 +92,18 @@ export default class extends React.Component{
         .append("circle")
         .attr("cx", d => xScale(d.Year))
         .attr("cy", d => yScale(d.Seconds))
-        .attr("r", 6)
-        .style("stroke", "black")
+        .attr("r", circleRadius)
+        .attr("class", d =>{ 
+            let klass = "dot SG-dot ";
+            if(d.Doping)klass += classDoping
+            else klass += classNoDoping;
+            return klass;
+        })
+        .attr("data-xvalue", d => d.Year)
+        .attr("data-yvalue", d => {
+            const mins = d.Time.split(":")[0];
+            return mins;
+        })
         .style("fill", d =>{
             if(d.Doping)
                 return dopingColor;
@@ -97,6 +112,7 @@ export default class extends React.Component{
         .on("mouseover", function(d){        
             d3.select("#tooltip")
             .style("display", "block")
+            .attr("date-year", xScale(d.Year))
             .html(getTooltipHtml(d));
         })
         .on("mouseout", function(d){
@@ -111,29 +127,39 @@ export default class extends React.Component{
         .attr("transform", `rotate(-90)`);
 
         //legend
+        const handleLegendMouseOverOut = (klass, toggle) => {
+            klass = `.${klass}`;
+            const circles = d3.selectAll(klass);
+            if(toggle) circles.attr("r", 10);
+            else circles.attr("r", circleRadius);
+        }
         const legendNoDoping = svg.append("g")
         .attr("id","legend").attr("class", "legend")
         .attr("transform", `translate(${maxRight}, ${h/2})`)
+        .on("mouseover",() => handleLegendMouseOverOut(classNoDoping, true))
+        .on("mouseout",() => handleLegendMouseOverOut(classNoDoping, false));
 
         const legendDoping = svg.append("g")
         .attr("id","legend").attr("class", "legend")
         .attr("transform", `translate(${maxRight}, ${(h/2) + 25 })`)
+        .on("mouseover",() => handleLegendMouseOverOut(classDoping, true))
+        .on("mouseout",() => handleLegendMouseOverOut(classDoping, false));
 
         legendNoDoping.append("text").text("No doping allegations")
         .style("text-anchor", "end")
         .style("font-size", 10)
-        .attr("y", 14)
+        .attr("y", 14);
         legendNoDoping.append("rect").style("fill", noDopingColor)
         .style("stroke", "black")        
         .attr("width", 18).attr("height", 18)
-        .attr("x", 5)
+        .attr("x", 5);
         legendDoping.append("text").text("Riders with doping allegations")
         .style("text-anchor", "end")
         .style("font-size", 10)
-        .attr("y", 14)
+        .attr("y", 14);
         legendDoping.append("rect").style("fill", dopingColor)
         .style("stroke", "black")        
         .attr("width", 18).attr("height", 18)
-        .attr("x", 5)
+        .attr("x", 5);
     }
 }

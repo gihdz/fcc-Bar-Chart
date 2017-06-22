@@ -18,3 +18,10 @@
     margin-top: 50px;
     margin-bottom: 80px;
 }
+.SG-dot{
+    stroke: black;
+}
+.SG-dot-active{
+    stroke: aquamarine;
+    stroke-width: 2px;
+}

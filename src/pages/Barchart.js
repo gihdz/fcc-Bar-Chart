@@ -3,15 +3,20 @@ import * as d3 from 'd3'
 import accounting from 'accounting-js'
 export default class extends React.Component{
     render(){
-        return (<div id="svg-container" className="main-container">
+        return ( <div>
+        
+             <div id="svg-container" className="main-container">
             <div id="tooltip" className="Barchart-tooltip" >
             </div>
             <div id="title" className="title">
                 United States <em>Gross Domestic Product</em>
             </div>
+        </div>
         </div>);
     }
-    componentDidMount(){        
+    componentDidMount(){
+        this.props.selecTestSuiteFor("bar-chart");     
+
         document.body.style.backgroundColor = "#708090"; 
         fetch("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json").then(d => d.json()).then(d => this.displayData(d)).catch(reason => console.log(reason));
     }
