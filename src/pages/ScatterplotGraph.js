@@ -104,7 +104,6 @@ export default class extends React.Component{
         .attr("data-xvalue", d => d.Year)
         .attr("data-yvalue", d => {
             const dateFromSeconds = new Date(d.Seconds * 1000);
-            console.log(dateFromSeconds);
             return dateFromSeconds;
         })
         .style("fill", d =>{
