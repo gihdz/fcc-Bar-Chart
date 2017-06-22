@@ -62,7 +62,9 @@ export default class extends React.Component{
         const xScaleRange = [maxLeft, maxRight];
         const xScale = d3.scaleLinear().domain(xScaleDomain).range(xScaleRange);
 
-        const xAxis = d3.axisBottom(xScale);    
+        const xAxis = d3.axisBottom(xScale)
+        .tickFormat(d => d.toString(10));   
+
         svg.append("g").attr("id", "x-axis")
         .attr("transform", `translate(0, ${maxBottom})`)
         .call(xAxis);
@@ -101,8 +103,9 @@ export default class extends React.Component{
         })
         .attr("data-xvalue", d => d.Year)
         .attr("data-yvalue", d => {
-            const mins = d.Time.split(":")[0];
-            return mins;
+            const dateFromSeconds = new Date(d.Seconds * 1000);
+            console.log(dateFromSeconds);
+            return dateFromSeconds;
         })
         .style("fill", d =>{
             if(d.Doping)
@@ -112,7 +115,7 @@ export default class extends React.Component{
         .on("mouseover", function(d){        
             d3.select("#tooltip")
             .style("display", "block")
-            .attr("date-year", xScale(d.Year))
+            .attr("data-year", d.Year)
             .html(getTooltipHtml(d));
         })
         .on("mouseout", function(d){
