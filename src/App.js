@@ -63,21 +63,4 @@ export default class extends React.Component {
     </div>
     </Router>);
   }
-  componentDidMount(){
-    setTimeout(() => {
-      const nav = document.getElementById("App-nav");
-      const fccTestSuite = document.getElementById("fcc_test_suite_indicator_wrapper");
-      if(!fccTestSuite) return;
-      const fccTestPanel = fccTestSuite.parentElement;      
-      
-      if(fccTestPanel){
-        nav.addEventListener("mouseover",() => {
-          fccTestPanel.style.display = "none";
-        } , false);
-        nav.addEventListener("mouseout",() => {
-          fccTestPanel.style.display = "block";
-        } , false);
-      }
-    },1000);
-  }  
 }

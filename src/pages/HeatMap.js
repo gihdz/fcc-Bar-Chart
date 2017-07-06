@@ -10,7 +10,7 @@ export default class extends React.Component{
         <div id="Heatmap-container">
             <div id="title" className="Heatmap-title">
                 <div id="HM-main-title">Monthly Global Land-Surface Temperature</div>
-                <p id="HM-sub-title"></p>
+                <p id="description" className="HM-sub-title"></p>
             </div>
 
         </div>
@@ -31,8 +31,8 @@ export default class extends React.Component{
         const baseTemp = data.baseTemperature;
         const mVariance = data.monthlyVariance;
         
-        const months = ["","January", "February", "March", "April", "May", "June", "July", 
-        "August", "September", "October", "November", "December", ""];
+        const months = ["January", "February", "March", "April", "May", "June", "July", 
+        "August", "September", "October", "November", "December"];
         const getTooltipHtml = (d) => {
             const temp = (baseTemp + d.variance).toFixed(1);
             let html =`${d.year} - ${months[d.month]}<br/>
@@ -76,7 +76,7 @@ export default class extends React.Component{
         const minYear = d3.min(mVariance, d => d.year);        
         const maxYear = d3.max(mVariance, d => d.year);
 
-        d3.select("#HM-sub-title").text(`${minYear} - ${maxYear}: base temperature ${baseTemp}℃`)
+        d3.select(".HM-sub-title").text(`${minYear} - ${maxYear}: base temperature ${baseTemp}℃`)
 
         const xScaleDomain = [minYear, maxYear];
         const xScaleRange = [maxLeft, maxRight];
@@ -96,7 +96,7 @@ export default class extends React.Component{
         .attr("y", 35 )   
         ;
 
-        const yScaleDomain = [d3.min(mVariance, d => d.month) - 1, d3.max(mVariance, d => d.month) + 1];
+        const yScaleDomain = [d3.min(mVariance, d => d.month) - 1, d3.max(mVariance, d => d.month) - 1];
         const yScaleRange = [maxTop, maxBottom];
 
         const yScale = d3.scaleLinear()
@@ -127,9 +127,9 @@ export default class extends React.Component{
         const diffW = maxRight - maxLeft;
         const rectW = diffW/diffYear;
 
-        
         rects.attr("x", d => xScale(d.year) + 1)
-        .attr("y", d => yScale(d.month) - 16)
+        .attr("y", d => yScale(d.month - 1))
+        .attr("data-month", d => d.month - 1).attr("data-year", d=> d.year).attr("data-temp", d => d.variance)
         .attr("width", rectW)
         .attr("height", d =>{
             return 33;            
@@ -142,6 +142,7 @@ export default class extends React.Component{
             const rect = this.getBoundingClientRect();
             tooltip.style("top", `${rect.top - 80}px`);
             tooltip.style("left", `${rect.left}px`);
+            tooltip.attr("data-year", d.year);
             tooltip.html(getTooltipHtml(d));
             tooltip.classed("show", true);
         })
@@ -166,7 +167,7 @@ export default class extends React.Component{
         .range(legendAxisRange);
         const axisLegend = d3.axisBottom(legendAxisScale);
 
-        const gLegend = svg.append("g").attr("id", "legend-axis")
+        const gLegend = svg.append("g").attr("id", "legend")
         .attr("transform", `translate(0, ${svgH - 50})`)
         .call(axisLegend);
 
