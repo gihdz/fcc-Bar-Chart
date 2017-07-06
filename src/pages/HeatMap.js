@@ -20,7 +20,7 @@ export default class extends React.Component{
         </div>);
     }
     componentDidMount(){
-        // this.props.selecTestSuiteFor("heat-map");
+        this.props.selecTestSuiteFor("heat-map");
 
         fetch("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json").then(res => res.json()).then(res => this.displayData(res)).catch(reason => console.log(reason));
         

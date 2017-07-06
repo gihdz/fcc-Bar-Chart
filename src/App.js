@@ -38,13 +38,24 @@ export default class extends React.Component {
     return ( 
     <Router>
     <div id="App-container" >
-      <ul id="App-nav" className="nav" >
+      <nav>
+        <div className="dropdown">
+  <button className="dropbtn">Menu</button>
+  <div className="dropdown-content">
+    <Link to={homeUrl}>Home</Link>
+    <Link to={barchartUrl}>Barchart</Link>
+    <Link to={scatterplotGraphUrl}>Scatterplot Graph</Link>
+    <Link to={heatmaphUrl}>Heat Map</Link>
+    
+  </div>
+</div>      
+      </nav>
+      {/*<ul id="App-nav" className="nav" >
         <li><Link to={homeUrl}>Home</Link></li>
         <li><Link to={barchartUrl}>Barchart</Link></li>
         <li><Link to={scatterplotGraphUrl}>Scatterplot Graph</Link></li>
         <li><Link to={heatmaphUrl}>Heat Map</Link></li>
-      </ul>
-
+      </ul>*/}
       <Route exact path={homeUrl} component={Home}/>
       <Route path={barchartUrl} render={props => <Barchart selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={scatterplotGraphUrl} render={props => <ScatterplotGraph selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
