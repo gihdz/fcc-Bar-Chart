@@ -4,9 +4,10 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import {Barchart, ScatterplotGraph} from './pages/';
+import {Barchart, ScatterplotGraph, HeatMap} from './pages/';
 import './css/Barchart.css';
 import './css/ScatterplotGraph.css';
+import './css/Heatmap.css';
 import './App.css';
 
 const Home = () => (
@@ -33,6 +34,7 @@ export default class extends React.Component {
     const homeUrl = `${base}/`;
     const barchartUrl = `${base}/barchart`;
     const scatterplotGraphUrl = `${base}/scatterplot`;
+    const heatmaphUrl = `${base}/heatmap`;
     return ( 
     <Router>
     <div id="App-container" >
@@ -40,18 +42,23 @@ export default class extends React.Component {
         <li><Link to={homeUrl}>Home</Link></li>
         <li><Link to={barchartUrl}>Barchart</Link></li>
         <li><Link to={scatterplotGraphUrl}>Scatterplot Graph</Link></li>
+        <li><Link to={heatmaphUrl}>Heat Map</Link></li>
       </ul>
 
       <Route exact path={homeUrl} component={Home}/>
       <Route path={barchartUrl} render={props => <Barchart selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={scatterplotGraphUrl} render={props => <ScatterplotGraph selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
+      <Route path={heatmaphUrl} render={props => <HeatMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
     </div>
     </Router>);
   }
   componentDidMount(){
     setTimeout(() => {
       const nav = document.getElementById("App-nav");
-      const fccTestPanel = document.getElementById("fcc_test_suite_indicator_wrapper").parentElement;      
+      const fccTestSuite = document.getElementById("fcc_test_suite_indicator_wrapper");
+      if(!fccTestSuite) return;
+      const fccTestPanel = fccTestSuite.parentElement;      
+      
       if(fccTestPanel){
         nav.addEventListener("mouseover",() => {
           fccTestPanel.style.display = "none";
