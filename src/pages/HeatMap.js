@@ -33,9 +33,10 @@ export default class extends React.Component{
         
         const months = ["January", "February", "March", "April", "May", "June", "July", 
         "August", "September", "October", "November", "December"];
+
         const getTooltipHtml = (d) => {
             const temp = (baseTemp + d.variance).toFixed(1);
-            let html =`${d.year} - ${months[d.month]}<br/>
+            let html =`${d.year} - ${months[d.month - 1]}<br/>
             ${temp}°C<br/>
             ${d.variance.toFixed(1)}°C`;        
             return html;
@@ -78,12 +79,16 @@ export default class extends React.Component{
 
         d3.select(".HM-sub-title").text(`${minYear} - ${maxYear}: base temperature ${baseTemp}℃`)
 
-        const xScaleDomain = [minYear, maxYear];
-        const xScaleRange = [maxLeft, maxRight];
+        const xScaleDomain = mVariance.map(val => val.year);
+        const xScaleRange = [maxLeft + 1, maxRight];
 
-        const xScale = d3.scaleLinear().domain(xScaleDomain).range(xScaleRange);
+        const xScale = d3.scaleBand().domain(xScaleDomain).range(xScaleRange);
 
         const xAxis = d3.axisBottom(xScale)
+        .tickSizeOuter(0)
+        .tickValues(
+            xScale.domain().filter(year => year % 10 === 0)
+        )
         .tickFormat(d => d.toString());
         
         svg.append("g").attr("id", "x-axis")
@@ -93,17 +98,14 @@ export default class extends React.Component{
         .text("Years")
         .style("fill", "black")
         .attr("x", w/2)
-        .attr("y", 35 )   
-        ;
+        .attr("y", 35 );
 
-        const yScaleDomain = [d3.min(mVariance, d => d.month) - 1, d3.max(mVariance, d => d.month) - 1];
+        const yScaleDomain = months.map((val, index) => index);
         const yScaleRange = [maxTop, maxBottom];
-
-        const yScale = d3.scaleLinear()
-        .domain(yScaleDomain)
-        .range(yScaleRange);
-
+    
+        const yScale = d3.scaleBand().domain(yScaleDomain).range(yScaleRange)
         const yAxis = d3.axisLeft(yScale)
+        .tickSizeOuter(0)
         .tickFormat(d => {
             return months[d];
         });
@@ -115,25 +117,18 @@ export default class extends React.Component{
         .style("fill", "black")
         .attr("x", -h/2 + 50)
         .attr("y", -60)
-        .attr("transform", "rotate(-90)")   
-        ;
+        .attr("transform", "rotate(-90)");
 
         //temp rects
         const rects = svg.selectAll(".Heatmap-rect").data(mVariance)
         .enter()
         .append("rect");
         
-        const diffYear = maxYear - minYear;
-        const diffW = maxRight - maxLeft;
-        const rectW = diffW/diffYear;
-
-        rects.attr("x", d => xScale(d.year) + 1)
+        rects.attr("x", d => xScale(d.year))
         .attr("y", d => yScale(d.month - 1))
         .attr("data-month", d => d.month - 1).attr("data-year", d=> d.year).attr("data-temp", d => d.variance)
-        .attr("width", rectW)
-        .attr("height", d =>{
-            return 33;            
-        })
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => yScale.bandwidth())
         .attr("class", "Heatmap-rect cell")
         .style("fill", d => {
             return getFill((baseTemp + d.variance).toFixed(1));

@@ -40,9 +40,9 @@ export default class extends React.Component {
     <div id="App-container" >
       <nav>
         <div className="dropdown">
-  <button className="dropbtn">Menu</button>
+  <button className="dropbtn">Graphs</button>
   <div className="dropdown-content">
-    <Link to={homeUrl}>Home</Link>
+    {/*<Link to={homeUrl}>Home</Link>*/}
     <Link to={barchartUrl}>Barchart</Link>
     <Link to={scatterplotGraphUrl}>Scatterplot Graph</Link>
     <Link to={heatmaphUrl}>Heat Map</Link>
