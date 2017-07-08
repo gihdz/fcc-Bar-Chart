@@ -4,10 +4,11 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import {Barchart, ScatterplotGraph, HeatMap} from './pages/';
+import {Barchart, ScatterplotGraph, HeatMap, ChoroplethMap} from './pages/';
 import './css/Barchart.css';
 import './css/ScatterplotGraph.css';
 import './css/Heatmap.css';
+import './css/ChoroplethMap.css';
 import './App.css';
 
 const Home = () => (
@@ -35,17 +36,19 @@ export default class extends React.Component {
     const barchartUrl = `${base}/barchart`;
     const scatterplotGraphUrl = `${base}/scatterplot`;
     const heatmaphUrl = `${base}/heatmap`;
+    const choroplethMapUrl = `${base}/choropleth`;
     return ( 
     <Router>
     <div id="App-container" >
       <nav>
         <div className="dropdown">
-  <button className="dropbtn">Graphs</button>
+  <button className="dropbtn">Charts</button>
   <div className="dropdown-content">
     {/*<Link to={homeUrl}>Home</Link>*/}
     <Link to={barchartUrl}>Barchart</Link>
     <Link to={scatterplotGraphUrl}>Scatterplot Graph</Link>
     <Link to={heatmaphUrl}>Heat Map</Link>
+    <Link to={choroplethMapUrl}>Choropleth Map</Link>
     
   </div>
 </div>      
@@ -60,6 +63,7 @@ export default class extends React.Component {
       <Route path={barchartUrl} render={props => <Barchart selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={scatterplotGraphUrl} render={props => <ScatterplotGraph selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={heatmaphUrl} render={props => <HeatMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
+      <Route path={choroplethMapUrl} render={props => <ChoroplethMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
     </div>
     </Router>);
   }

@@ -123,7 +123,7 @@ export default class extends React.Component{
         const rects = svg.selectAll(".Heatmap-rect").data(mVariance)
         .enter()
         .append("rect");
-        
+
         rects.attr("x", d => xScale(d.year))
         .attr("y", d => yScale(d.month - 1))
         .attr("data-month", d => d.month - 1).attr("data-year", d=> d.year).attr("data-temp", d => d.variance)
