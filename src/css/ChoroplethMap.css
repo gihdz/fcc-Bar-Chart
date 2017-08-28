@@ -25,3 +25,6 @@
   stroke-linecap: round;
   pointer-events: none;
 }
+#CM-container{
+    text-align: center;
+}

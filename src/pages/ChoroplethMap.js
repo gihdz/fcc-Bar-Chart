@@ -9,11 +9,12 @@ export default class extends React.Component{
             <div id="tooltip" className="CM-tooltip">
                 
         </div>
-        <input id="test-thres" type="number" defaultValue="0" />
         <div id="CM-container">
             <div id="title" className="CM-title">
-                <div className="CM-main-title">Choropleth Map</div>
-                <p id="description" className="CM-sub-title"></p>
+                <h1 className="CM-main-title">United States Educational Attainment</h1>
+                <p id="description" className="CM-sub-title">
+                Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)
+                </p>
             </div>
 
         </div>
@@ -21,7 +22,7 @@ export default class extends React.Component{
         )
     }
     componentDidMount(){
-        // this.props.selecTestSuiteFor("heat-map");
+        this.props.selecTestSuiteFor("choropleth");
 
         fetch("https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/for_user_education.json").then(res => res.json()).then(res => this.initData(res)).catch(reason => console.log(reason));
         
@@ -59,6 +60,12 @@ export default class extends React.Component{
             .style("left", `${d3.event.x + 20}px`);
         }); 
 
+        const toColorScale = d3.scaleLinear().domain([d3.min(educationData, d => d.bachelorsOrHigher),d3.max(educationData, d => d.bachelorsOrHigher)]).range([2, 10]);
+
+        const colorScale = d3.scaleThreshold()
+        .domain(d3.range(2, 10))
+        .range(d3Schemes.schemeGreens[9]);
+
         svg.append("g")
         .attr("class", "CM-counties")
         .selectAll("path")
@@ -71,7 +78,10 @@ export default class extends React.Component{
         .on("mouseout", d => {
             tooltip.classed("show", false);
         })
-        .attr("d", geoPath);
+        .attr("d", geoPath)
+        .style("fill", d => {
+            return colorScale(toColorScale(educationDataHash[d.id].bachelorsOrHigher));
+        });
 
         svg.append("path")
         .attr("class", "CM-county-borders")
@@ -91,19 +101,12 @@ export default class extends React.Component{
         // }
         // console.log(colorScaleDomain);
 
+        const fromColorToBachelorsScale = d3.scaleLinear().domain([2, 10]).range([d3.min(educationData, d => d.bachelorsOrHigher),d3.max(educationData, d => d.bachelorsOrHigher)]);
         
-        // const colorScale = d3.scaleThreshold().domain(colorScaleDomain).range(colorScaleRange);
-        const otherScale = d3.scaleLinear().domain([d3.min(educationData, d => d.bachelorsOrHigher),d3.max(educationData, d => d.bachelorsOrHigher)]).range([1,10]);
-
-        var x = d3.scaleLinear()
+        //LEGEND
+        const x = d3.scaleLinear()
         .domain([1, 10])
         .rangeRound([600, 860]);
-
-        var colorScale = d3.scaleThreshold()
-            .domain(d3.range(2, 10))
-            .range(d3Schemes.schemeBlues[9]);
-
-            console.log(d3.range(2, 10))
 
         var g = svg.append("g")
             .attr("class", "key")
@@ -133,17 +136,11 @@ export default class extends React.Component{
 
         g.call(d3.axisBottom(x)
             .tickSize(13)
-            .tickFormat(function(x, i) { return i ? x : x + "%"; })
+            .tickFormat(function(x, i) { 
+                return fromColorToBachelorsScale(x).toFixed(0) + "%";
+             })
             .tickValues(colorScale.domain()))
             .select(".domain")
             .remove();
-        d3.select("#test-thres")
-        .on("click", function(){
-            console.log(colorScale(parseFloat(this.value)));
-            // this.select();
-        })
-        // console.log(colorScale(6));
-
-
     }
 }
