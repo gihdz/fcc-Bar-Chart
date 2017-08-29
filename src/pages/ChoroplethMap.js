@@ -65,22 +65,28 @@ export default class extends React.Component{
         .range(d3Schemes.schemeGreens[9]);
 
         svg.append("g")
-        .attr("class", "CM-counties")
+        .attr("class", "CM-county")
         .selectAll("path")
         .data(topojson.feature(data, data.objects.counties).features)
         .enter().append("path")
+        .attr("class", "county")
+        
         .on("mouseover", d => {
             tooltip.html(getTooltipHtml(d));
+            tooltip.attr("data-education", educationDataHash[d.id].bachelorsOrHigher )
             tooltip.classed("show", true);
         })
         .on("mouseout", d => {
             tooltip.classed("show", false);
         })
         .attr("d", geoPath)
-        .style("fill", d => {
+        .attr("fill", d => {
             return colorScale(educationDataHash[d.id].bachelorsOrHigher);
-        });
-
+        })
+        .attr("data-fips", d => educationDataHash[d.id].fips)
+        .attr("data-education", d => educationDataHash[d.id].bachelorsOrHigher)
+        ;
+        
         svg.append("path")
         .attr("class", "CM-county-borders")
         .attr("d", geoPath(topojson.mesh(data, data.objects.counties, function(a, b) { return a !== b; })));
@@ -92,7 +98,8 @@ export default class extends React.Component{
 
         var g = svg.append("g")
             .attr("class", "key")
-            .attr("transform", "translate(0,40)");
+            .attr("transform", "translate(0,40)")
+            .attr("id", "legend");
 
         g.selectAll("rect")
         .data(colorScale.range().map(function(d) {

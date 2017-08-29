@@ -14,7 +14,7 @@
 .CM-tooltip.show{
     display: block;
 }
-.CM-counties :hover{
+.CM-county :hover{
     fill: red;
 }
 .CM-county-borders {
