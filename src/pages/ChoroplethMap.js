@@ -60,10 +60,8 @@ export default class extends React.Component{
             .style("left", `${d3.event.x + 20}px`);
         }); 
 
-        const toColorScale = d3.scaleLinear().domain([d3.min(educationData, d => d.bachelorsOrHigher),d3.max(educationData, d => d.bachelorsOrHigher)]).range([2, 10]);
-
         const colorScale = d3.scaleThreshold()
-        .domain(d3.range(2, 10))
+        .domain(d3.range(2.6, 75.1, (75.1-2.6)/8))
         .range(d3Schemes.schemeGreens[9]);
 
         svg.append("g")
@@ -80,32 +78,16 @@ export default class extends React.Component{
         })
         .attr("d", geoPath)
         .style("fill", d => {
-            return colorScale(toColorScale(educationDataHash[d.id].bachelorsOrHigher));
+            return colorScale(educationDataHash[d.id].bachelorsOrHigher);
         });
 
         svg.append("path")
         .attr("class", "CM-county-borders")
         .attr("d", geoPath(topojson.mesh(data, data.objects.counties, function(a, b) { return a !== b; })));
 
-        // // const colorScaleDomain = [d3.min(educationData, d => d.bachelorsOrHigher), d3.max(educationData, d => d.bachelorsOrHigher)];
-        // const colorScaleRange = ["#e5f5e0","#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"];
-        // let max = 100;
-        // max = d3.max(educationData, d => d.bachelorsOrHigher);
-        // let inc = -10;
-        // inc = d3.min(educationData, d => d.bachelorsOrHigher) + 8;
-        // const colorScaleDomain = [];
-        // const diff = max/(colorScaleRange.length - 1);
-        // for(var i = 0; i < colorScaleRange.length - 1; i++){
-        //     colorScaleDomain.push(inc);
-        //     inc += diff;
-        // }
-        // console.log(colorScaleDomain);
-
-        const fromColorToBachelorsScale = d3.scaleLinear().domain([2, 10]).range([d3.min(educationData, d => d.bachelorsOrHigher),d3.max(educationData, d => d.bachelorsOrHigher)]);
-        
         //LEGEND
         const x = d3.scaleLinear()
-        .domain([1, 10])
+        .domain([2.6, 75.1])
         .rangeRound([600, 860]);
 
         var g = svg.append("g")
@@ -136,9 +118,7 @@ export default class extends React.Component{
 
         g.call(d3.axisBottom(x)
             .tickSize(13)
-            .tickFormat(function(x, i) { 
-                return fromColorToBachelorsScale(x).toFixed(0) + "%";
-             })
+            .tickFormat(function(x) { return Math.round(x) + '%' })
             .tickValues(colorScale.domain()))
             .select(".domain")
             .remove();
