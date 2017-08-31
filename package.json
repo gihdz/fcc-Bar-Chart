@@ -5,13 +5,13 @@
   "homepage": "https://gihdz.github.io/fcc-data-visualization-challenges/",
   "dependencies": {
     "accounting-js": "^1.1.1",
-    "d3": "^4.9.1",
+    "d3": "^4.10.0",
     "d3-scale-chromatic": "^1.1.1",
     "gh-pages": "^1.0.0",
     "postscribe": "^2.0.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-router-dom": "^4.1.1",
+    "react-router-dom": "^4.2.2",
     "topojson": "^3.0.0"
   },
   "devDependencies": {

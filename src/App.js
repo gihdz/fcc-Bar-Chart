@@ -4,11 +4,12 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import {Barchart, ScatterplotGraph, HeatMap, ChoroplethMap} from './pages/';
+import {Barchart, ScatterplotGraph, HeatMap, ChoroplethMap, TreeMap} from './pages/';
 import './css/Barchart.css';
 import './css/ScatterplotGraph.css';
 import './css/Heatmap.css';
 import './css/ChoroplethMap.css';
+import './css/TreeMap.css';
 import './App.css';
 
 const Home = () => (
@@ -37,6 +38,7 @@ export default class extends React.Component {
     const scatterplotGraphUrl = `${base}/scatterplot`;
     const heatmaphUrl = `${base}/heatmap`;
     const choroplethMapUrl = `${base}/choropleth`;
+    const treemapUrl = `${base}/treemap`;
     return ( 
     <Router>
     <div id="App-container" >
@@ -49,6 +51,7 @@ export default class extends React.Component {
     <Link to={scatterplotGraphUrl}>Scatterplot Graph</Link>
     <Link to={heatmaphUrl}>Heat Map</Link>
     <Link to={choroplethMapUrl}>Choropleth Map</Link>
+    <Link to={treemapUrl}>Tree Map</Link>
     
   </div>
 </div>      
@@ -64,6 +67,7 @@ export default class extends React.Component {
       <Route path={scatterplotGraphUrl} render={props => <ScatterplotGraph selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={heatmaphUrl} render={props => <HeatMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={choroplethMapUrl} render={props => <ChoroplethMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
+      <Route path={treemapUrl} render={props => <TreeMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
     </div>
     </Router>);
   }

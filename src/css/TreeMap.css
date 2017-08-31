@@ -1,0 +1,19 @@
+.TM-tooltip{
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 6px;
+    color: white;
+    text-align: center;
+    padding: 0.5em;
+    display:none;
+    position: fixed;
+    opacity: 1;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.TM-tooltip.show{
+    display: block;
+}
+#TM-container{
+    text-align: center;
+}
