@@ -35,7 +35,7 @@ export default class extends React.Component{
         const w = 960;
         const h = 570;
                 
-        const svg = d3.select("#TM-container").append("svg")
+        const svg = d3.select("#TM-container").append("div").style("display",  "inline-block").append("svg")
         .attr("width", w).attr("height", h);
 
         const tooltip = d3.select("#tooltip");
@@ -104,51 +104,62 @@ export default class extends React.Component{
               .text(function(d) { return d; });
 
 
+              //LEGEND
+              const legendData = svg.selectAll('[data-legend]');
+              console.log("legend data", legendData);
+              const categoryKeys = {};
+              let categories = [];
+              legendData.each(function()
+              { 
+                const self = d3.select(this);
+                const category = self.attr('data-legend');
+                if(!categoryKeys[category]){ 
+                categoryKeys[category] = true;
+                categories = categories.concat(
+                        {
+                            name: category,
+                            pos: self.attr('data-legend-pos') || this.getBBox().y,
+                            color: self.style('fill') !== 'none' ? self.style('fill') : self.style('stroke')
+                        }
+                    )
+                }
+            });
+            console.log("categories: ", categories);
+            const svgLegendWidth = 250;
+            const svgLegend = d3.select("#TM-container").append("div").style("display",  "inline-block").append("svg")
+            .attr("width", svgLegendWidth).attr("height", "100%");
 
+            const catPos = {x: 5, y :10};
 
-            //   const svgLegend = d3.select("#TM-container").append("svg")
-            //   .attr("width", 400).attr("height", "100%");
+              const legends = svgLegend.selectAll("g").data(categories).enter()
+              .append("g")
+              .attr("transform", function(d) {
+                  let translate = "translate(" + catPos.x + "," + catPos.y + ")"; 
+                  if(catPos.x <= svgLegendWidth - 50) {
+                      catPos.x += 100;
+                  }
+                  else {
+                        catPos.x = 5;
+                        catPos.y += 25;
+                    }
+                  return translate; 
+                })
+                .on("mouseover", function(d) {
+                    d3.selectAll(`[data-legend='${d.name}']`).attr("stroke", "black");                    
+                })
+                .on("mouseout", function(d) {
+                    d3.selectAll(`[data-legend='${d.name}']`).attr("stroke", "none");
+                });
 
+              legends.append("rect")
+              .attr("width", 15).attr("height", 15)
+              .attr("fill", d => d.color)
+              .style("stroke", "black");
 
-            //   console.log("d3 legend:", d3legend);
-            //   console.log("d3 legend():", d3legend());
-            //   console.log("d3 legend type of:", typeof(d3legend));
-                // const legend = svg.append("g")
-                // .attr("class","legend")
-                // .attr("transform","translate(50,30))")
-                // .style("font-size","12px")
-                // .call(d3legend);
-                //   console.log(d3legend(d3))
-
-                // console.log(svg.selectAll('[data-legend]'));
-          
-                
-                
-            // cell.append("title")
-            //     .text(function(d) { return d.data.id + "\n" + format(d.value); });
-          
-            // d3.selectAll("input")
-            //     .data([sumBySize, sumByCount], function(d) { return d ? d.name : this.value; })
-            //     .on("change", changed);
-          
-            // var timeout = d3.timeout(function() {
-            //   d3.select("input[value=\"sumByCount\"]")
-            //       .property("checked", true)
-            //       .dispatch("change");
-            // }, 2000);
-          
-            // function changed(sum) {
-            //   timeout.stop();
-          
-            //   treemap(root.sum(sum));
-          
-            //   cell.transition()
-            //       .duration(750)
-            //       .attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; })
-            //     .select("rect")
-            //       .attr("width", function(d) { return d.x1 - d.x0; })
-            //       .attr("height", function(d) { return d.y1 - d.y0; });
-            // }
+              legends.append("text")
+              .attr("x", 17).attr("y", 11)
+              .style("font-size", 10)
+              .text(d => d.name);
           });
     }
 }
