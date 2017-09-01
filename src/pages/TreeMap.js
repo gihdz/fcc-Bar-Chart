@@ -22,20 +22,23 @@ export default class extends React.Component{
                 </p>
 
             </div>
+            <div id="TM-svg-container"></div>
+            <div id ="TM-svg-legend-container"></div>
 
         </div>
         </div>
         )
     }
     componentDidMount(){
-
+        this.props.selecTestSuiteFor("tree-map");
+        
         this.initData();
     }
     initData(){
         const w = 960;
         const h = 570;
                 
-        const svg = d3.select("#TM-container").append("div").style("display",  "inline-block").append("svg")
+        const svg = d3.select("#TM-svg-container").append("svg")
         .attr("width", w).attr("height", h);
 
         const tooltip = d3.select("#tooltip");
@@ -72,7 +75,7 @@ export default class extends React.Component{
                 .attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; })
                 .on("mouseover", d => {
                     tooltip.html(getTooltipHtml(d));
-                  // tooltip.attr("data-education", educationDataHash[d.id].bachelorsOrHigher )
+                  tooltip.attr("data-value", d.data.value )
                     tooltip.classed("show", true);
                   })
                   .on("mouseout", d => {
@@ -86,6 +89,10 @@ export default class extends React.Component{
                 .attr("height", function(d) { return d.y1 - d.y0; })
                 .attr("fill", function(d) { return color(d.parent.data.id); })
                 .attr("data-legend", d => d.parent.data.name)
+                .attr("class", "tile")
+                .attr("data-name", d=> d.data.name)
+                .attr("data-category", d=> d.data.category)
+                .attr("data-value", d=> d.data.value)
                 ;
           
             cell.append("clipPath")
@@ -106,7 +113,6 @@ export default class extends React.Component{
 
               //LEGEND
               const legendData = svg.selectAll('[data-legend]');
-              console.log("legend data", legendData);
               const categoryKeys = {};
               let categories = [];
               legendData.each(function()
@@ -126,8 +132,8 @@ export default class extends React.Component{
             });
             console.log("categories: ", categories);
             const svgLegendWidth = 250;
-            const svgLegend = d3.select("#TM-container").append("div").style("display",  "inline-block").append("svg")
-            .attr("width", svgLegendWidth).attr("height", "100%");
+            const svgLegend = d3.select("#TM-svg-legend-container").append("svg")
+            .attr("id", "legend").attr("width", svgLegendWidth).attr("height", 200);
 
             const catPos = {x: 5, y :10};
 

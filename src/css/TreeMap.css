@@ -15,5 +15,10 @@
     display: block;
 }
 #TM-container{
-    /* text-align: center; */
+    text-align: center;
+}
+#TM-svg-legend-container{
+}
+#TM-svg-container{
+    
 }
