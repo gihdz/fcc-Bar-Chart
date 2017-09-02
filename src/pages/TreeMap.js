@@ -1,6 +1,14 @@
 import React from 'react'
 import * as d3 from 'd3'
-const videoGameSalesUrl = "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/video-game-sales-data.json";
+import {
+    Link
+  } from 'react-router-dom';
+const datasetUrl = {
+    videogames:{ url: "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/video-game-sales-data.json", subTitle: "Top 100 Most Sold Video Games Grouped by Platform"},
+    movies:{ url: "https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/movie-data.json", subTitle:"Top 100 Highest Grossing Movies Grouped By Genre"},
+    kickstarter: {url:"https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/kickstarter-funding-data.json", subTitle: "Top 100 Most Pledged Kickstarter Campaigns Grouped By Category"}
+
+}
 function sumByValue(d) {
     return d.value;
   }
@@ -12,11 +20,30 @@ function sumByValue(d) {
 };
 export default class extends React.Component{
     render(){
-        return(<div>
+        const base = process.env.PUBLIC_URL;
+        const treemapUrl = `${base}/treemap`;
+        return(
+            <div>
             <div id="tooltip" className="TM-tooltip"></div>
         <div id="TM-container">
+        <nav id="sub-nav">
+                <div>
+                    <ul id="TM-nav-links" >
+                        <li>
+                <Link to={treemapUrl + "/videogames"}>Video Games</Link>
+                </li>
+                <li>                
+                <Link to={treemapUrl + "/movies"}>Movies</Link> 
+                </li>
+                <li>                
+                <Link to={treemapUrl + "/kickstarter"}>KickStarter</Link>
+                </li>
+                
+                </ul>
+                </div>
+                </nav> 
             <div id="title" className="TM-title">
-                <h1 className="TM-main-title"></h1>
+                <h2 className="TM-main-title"> </h2>
                 <p id="description" className="TM-sub-title">
                 
                 </p>
@@ -27,18 +54,32 @@ export default class extends React.Component{
 
         </div>
         </div>
-        )
+        );
     }
     componentDidMount(){
         this.props.selecTestSuiteFor("tree-map");
-        
-        this.initData();
+        this.init(this.props);
     }
-    initData(){
+    componentWillReceiveProps(newProps){
+        this.init(newProps);
+    }
+    init(treeMapProps){
+        const {dataset} = treeMapProps.match.params;
+        
+        console.log("dataset: ", dataset);
+        if(datasetUrl[dataset])
+            this.initData(datasetUrl[dataset]);
+        else
+            alert("Url not found");
+    }
+    initData(dataset){
         const w = 960;
         const h = 570;
                 
-        const svg = d3.select("#TM-svg-container").append("svg")
+        const svgContainer = d3.select("#TM-svg-container");
+        svgContainer.select("svg").remove();
+        
+        const svg = svgContainer.append("svg")
         .attr("width", w).attr("height", h);
 
         const tooltip = d3.select("#tooltip");
@@ -50,8 +91,7 @@ export default class extends React.Component{
 
         const fader = function(color) { 
             return d3.interpolateRgb(color, "#fff")(0.2); },
-        color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
-        format = d3.format(",d");
+        color = d3.scaleOrdinal(d3.schemeCategory20.map(fader))
 
         const treemap = d3.treemap()
         .tile(d3.treemapResquarify)
@@ -59,9 +99,13 @@ export default class extends React.Component{
         .round(true)
         .paddingInner(1);
 
-        d3.json(videoGameSalesUrl, function(error, data) {
+        d3.json(dataset.url, function(error, data) {
             if (error) throw error;
-          
+            
+           //setting title 
+           d3.select(".TM-main-title").text(data.name);
+           d3.select(".TM-sub-title").text(dataset.subTitle);
+            
             const root = d3.hierarchy(data)
                 .eachBefore(function(d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; })
                 .sum(sumByValue)
@@ -132,7 +176,10 @@ export default class extends React.Component{
             });
             console.log("categories: ", categories);
             const svgLegendWidth = 250;
-            const svgLegend = d3.select("#TM-svg-legend-container").append("svg")
+            
+            const svgLegendContainer = d3.select("#TM-svg-legend-container");
+            svgLegendContainer.select("svg").remove();
+            const svgLegend = svgLegendContainer.append("svg")
             .attr("id", "legend").attr("width", svgLegendWidth).attr("height", 200);
 
             const catPos = {x: 5, y :10};

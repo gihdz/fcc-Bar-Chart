@@ -51,23 +51,18 @@ export default class extends React.Component {
     <Link to={scatterplotGraphUrl}>Scatterplot Graph</Link>
     <Link to={heatmaphUrl}>Heat Map</Link>
     <Link to={choroplethMapUrl}>Choropleth Map</Link>
-    <Link to={treemapUrl}>Tree Map</Link>
-    
+    <Link to={treemapUrl + "/videogames"}>Tree Map</Link>
   </div>
 </div>      
       </nav>
-      {/*<ul id="App-nav" className="nav" >
-        <li><Link to={homeUrl}>Home</Link></li>
-        <li><Link to={barchartUrl}>Barchart</Link></li>
-        <li><Link to={scatterplotGraphUrl}>Scatterplot Graph</Link></li>
-        <li><Link to={heatmaphUrl}>Heat Map</Link></li>
-      </ul>*/}
+      
       <Route exact path={homeUrl} component={Home}/>
       <Route path={barchartUrl} render={props => <Barchart selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={scatterplotGraphUrl} render={props => <ScatterplotGraph selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={heatmaphUrl} render={props => <HeatMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
       <Route path={choroplethMapUrl} render={props => <ChoroplethMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
-      <Route path={treemapUrl} render={props => <TreeMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
+      <Route path={treemapUrl + "/:dataset"} render={props => <TreeMap selecTestSuiteFor= {selecTestSuiteFor} {...props} />}/>
+      
     </div>
     </Router>);
   }
