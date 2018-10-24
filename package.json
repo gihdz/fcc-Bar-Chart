@@ -5,7 +5,7 @@
   "homepage": "https://gihdz.github.io/fcc-data-visualization-challenges/",
   "dependencies": {
     "accounting-js": "^1.1.1",
-    "d3": "^4.10.0",
+    "d3": "^4.13.0",
     "d3-scale-chromatic": "^1.1.1",
     "gh-pages": "^1.0.0",
     "postscribe": "^2.0.8",

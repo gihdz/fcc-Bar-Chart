@@ -66,7 +66,7 @@ export default class extends React.Component{
     init(treeMapProps){
         const {dataset} = treeMapProps.match.params;
         
-        console.log("dataset: ", dataset);
+        // console.log("dataset: ", dataset);
         if(datasetUrl[dataset])
             this.initData(datasetUrl[dataset]);
         else
@@ -96,9 +96,7 @@ export default class extends React.Component{
         const treemap = d3.treemap()
         .tile(d3.treemapResquarify)
         .size([w, h])
-        .round(true)
         .paddingInner(1);
-
         d3.json(dataset.url, function(error, data) {
             if (error) throw error;
             
@@ -136,7 +134,12 @@ export default class extends React.Component{
                 .attr("class", "tile")
                 .attr("data-name", d=> d.data.name)
                 .attr("data-category", d=> d.data.category)
-                .attr("data-value", d=> d.data.value)
+                .attr("data-value", d=> {
+
+                    // console.log(`value: ${d.value}, width: ${d.x1 - d.x0}, height: ${d.y1 - d.y0}, area: ${(d.x1 - d.x0) * (d.y1 - d.y0)}, name: ${d.data.name}`)
+                    // d.data.value
+                    return d.data.value;
+                })
                 ;
           
             cell.append("clipPath")
@@ -174,7 +177,7 @@ export default class extends React.Component{
                     )
                 }
             });
-            console.log("categories: ", categories);
+            // console.log("categories: ", categories);
             const svgLegendWidth = 250;
             
             const svgLegendContainer = d3.select("#TM-svg-legend-container");
@@ -206,6 +209,7 @@ export default class extends React.Component{
 
               legends.append("rect")
               .attr("width", 15).attr("height", 15)
+              .attr("class", "legend-item")
               .attr("fill", d => d.color)
               .style("stroke", "black");
 

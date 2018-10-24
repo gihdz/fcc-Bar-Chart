@@ -162,11 +162,12 @@ export default class extends React.Component{
         .range(legendAxisRange);
         const axisLegend = d3.axisBottom(legendAxisScale);
 
-        const gLegend = svg.append("g").attr("id", "legend")
+        const legendContainer = svg.append('g').attr('id', 'legend');
+        const legendTicks = legendContainer.append("g")
         .attr("transform", `translate(0, ${svgH - 50})`)
         .call(axisLegend);
 
-        gLegend.select("path").style("stroke-width", 0);
+        legendTicks.select("path").style("stroke-width", 0);
 
         // legend rect        
         legendDomain.push(13);
@@ -179,7 +180,7 @@ export default class extends React.Component{
 
         const legendScale = d3.scaleOrdinal().domain(legendDomain).range(legendRange);
         
-        svg.selectAll(".rect-legend")
+        legendContainer.selectAll(".rect-legend")
         .data(legendDomain)
         .enter()
         .append("rect")
